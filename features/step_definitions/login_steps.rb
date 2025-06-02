@@ -1,4 +1,4 @@
-Given('I am on the login page') do
+Given('I am on the login page of SauceDemo') do
   visit 'https://www.saucedemo.com'
 end
 
