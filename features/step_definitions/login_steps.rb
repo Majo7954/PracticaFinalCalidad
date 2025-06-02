@@ -1,17 +1,29 @@
-Given('que estoy en la página de inicio') do
-  visit('/')
+Given('I am on the login page') do
+  visit 'https://www.saucedemo.com'
 end
 
-When('ingreso el usuario {string} y la contraseña {string}') do |usuario, contraseña|
-  fill_in 'user-name', with: usuario
-  fill_in 'password', with: contraseña
+When('I login with username {string} and password {string}') do |username, password|
+  fill_in 'user-name', with: username
+  fill_in 'password', with: password
   click_button 'Login'
 end
 
-Then('debería ver la página de productos') do
-  expect(page).to have_content('Products')
+Then('I should be redirected to the inventory page') do
+  expect(URI.parse(current_url).path).to eq('/inventory.html')
 end
 
-Then('debería ver un mensaje de error') do
-  expect(page).to have_css('[data-test="error"]')
+Then('I should not be redirected to the inventory page') do
+  expect(URI.parse(current_url).path).not_to eq('/inventory.html')
+end
+
+Then('I should see an error message {string}') do |expected_message|
+  expect(page).to have_content(expected_message)
+end
+
+Then('I should remain on the login page') do
+  expect(URI.parse(current_url).path).to eq('/')
+end
+
+When('I reload the page') do
+  visit current_url
 end

@@ -1,36 +1,83 @@
-Feature: Login en SauceDemo
+Feature: Login to Swag Labs
 
   Background:
-    Given que estoy en la página de inicio
+    Given I am on the login page of SauceDemo
 
-  Scenario: Login exitoso
-    When ingreso el usuario "standard_user" y la contraseña "secret_sauce"
-    Then debería ver la página de productos
+  @passed
+  Scenario: Login with valid credentials
+    When I login with username "standard_user" and password "secret_sauce"
+    Then I should be redirected to the inventory page
 
-  Scenario: Login con credenciales inválidas
-    When ingreso el usuario "fake_user" y la contraseña "fake_password"
-    Then debería ver un mensaje de error
+  @locked
+  @rejected
+  Scenario: Login with locked out user
+    When I login with username "locked_out_user" and password "secret_sauce"
+    Then I should see an error message "Epic sadface: Sorry, this user has been locked out."
+    And I should remain on the login page
 
-  Scenario: Login con campos vacíos
-    When ingreso el usuario "" y la contraseña ""
-    Then debería ver un mensaje de error
+  @passed
+  Scenario: Login with a user with interface issues
+    When I login with username "problem_user" and password "secret_sauce"
+    Then I should be redirected to the inventory page
 
-  Scenario: Login con usuario bloqueado
-    When ingreso el usuario "locked_out_user" y la contraseña "secret_sauce"
-    Then debería ver un mensaje de error "Epic sadface: Sorry, this user has been locked out."
-    And no debería permitir el acceso a la aplicación
+  @passed
+  Scenario: Login with performance glitch user
+    When I login with username "performance_glitch_user" and password "secret_sauce"
+    Then I should be redirected to the inventory page
 
-  Scenario: Login con usuario con problemas de interfaz
-    When ingreso el usuario "problem_user" y la contraseña "secret_sauce"
-    Then debería ver la página de productos
-    And todas las imágenes deberían ser iguales
+  @passed
+  Scenario: Login with error user
+    When I login with username "error_user" and password "secret_sauce"
+    Then I should be redirected to the inventory page
 
-  Scenario: Login con usuario con problemas de rendimiento
-    When ingreso el usuario "performance_glitch_user" y la contraseña "secret_sauce"
-    Then debería ver la página de productos
-    And debería experimentar un retraso en el rendimiento
+  @passed
+  Scenario: Login with visual user
+    When I login with username "visual_user" and password "secret_sauce"
+    Then I should be redirected to the inventory page
 
-  Scenario: Login con usuario con errores
-    When ingreso el usuario "error_user" y la contraseña "secret_sauce"
-    Then debería ver la página de productos
-    And debería experimentar un retraso en el rendimiento
+  @rejected
+  Scenario: Attempt to login with empty username and password
+    When I login with username "" and password ""
+    Then I should see an error message "Epic sadface: Username is required"
+
+  @rejected
+  Scenario: Attempt to login with only username
+    When I login with username "standard_user" and password ""
+    Then I should see an error message "Epic sadface: Password is required"
+
+  @rejected
+  Scenario: Attempt to login with only password
+    When I login with username "" and password "secret_sauce"
+    Then I should see an error message "Epic sadface: Username is required"
+
+  @rejected
+  Scenario: Login with non-existent user
+    When I login with username "non_existing_user" and password "secret_sauce"
+    Then I should see an error message "Epic sadface: Username and password do not match any user in this service"
+
+  @rejected
+  Scenario: Login with leading/trailing spaces in username and password
+    When I login with username " standard_user " and password " secret_sauce "
+    Then I should see an error message "Epic sadface: Username and password do not match any user in this service"
+
+  @rejected
+  Scenario: Login with uppercase username
+    When I login with username "STANDARD_USER" and password "secret_sauce"
+    Then I should see an error message "Epic sadface: Username and password do not match any user in this service"
+
+  @rejected
+  Scenario: Login with special characters in username
+    When I login with username "' OR 1=1; --" and password "secret_sauce"
+    Then I should see an error message "Epic sadface: Username and password do not match any user in this service"
+
+  @rejected
+  Scenario: Multiple failed login attempts
+    When I login with username "non_existing_user" and password "wrong_pass"
+    And I login with username "non_existing_user" and password "wrong_pass"
+    And I login with username "non_existing_user" and password "wrong_pass"
+    Then I should see an error message "Epic sadface: Username and password do not match any user in this service"
+
+  @special
+  Scenario: Reload the login page without entering credentials
+    When I reload the page
+    Then I should remain on the login page
