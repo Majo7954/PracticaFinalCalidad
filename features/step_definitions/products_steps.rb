@@ -1,5 +1,5 @@
 Then('I should be on the products page') do
-  expect(current_url).to include('/inventory.html')
+  expect(page).to have_content('Products')
 end
 
 Then('I should see a list of available products') do

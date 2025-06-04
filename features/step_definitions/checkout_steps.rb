@@ -19,6 +19,7 @@ end
 
 Then('I should be redirected to the cart page') do
   expect(page).to have_content('Your Cart')
+  expect(page).to have_button('Continue Shopping')
   expect(page).not_to have_button('Finish')
 end
 
@@ -64,7 +65,6 @@ end
 Then('I should be redirected to the products page from checkout overview') do
   expect(page).to have_content('Products')
 end
-
 
 When('I complete the checkout process by entering my details and clicking Finish') do
   fill_in 'first-name', with: 'Maria'
