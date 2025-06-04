@@ -20,7 +20,7 @@ When('I click on Continue Shopping') do
   click_button 'Continue Shopping'
 end
 
-Then('I should be redirected to the products page') do
+Then('I should be redirected to the products page from the cart') do
   expect(page).to have_content('Products')
   expect(page).to have_button('Add to cart')
 end
