@@ -30,4 +30,4 @@ Feature: Checkout process in SauceDemo
     When I enter my first name "Ana", last name "Soto" and postal code "78901"
     And I click on Continue
     And I click on Cancel
-    Then I should be redirected to the products page
+    Then I should be redirected to the products page from checkout overview

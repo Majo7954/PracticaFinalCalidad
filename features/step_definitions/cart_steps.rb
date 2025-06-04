@@ -20,8 +20,8 @@ When('I click on Continue Shopping') do
   click_button 'Continue Shopping'
 end
 
-Then('I should be redirected to the products page') do
-  expect(current_url).to include('/inventory.html')
+Then('I should be redirected to the products page from the cart') do
+  expect(page).to have_content('Products')
 end
 
 When('I click on Checkout') do
