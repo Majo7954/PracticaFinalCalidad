@@ -21,7 +21,8 @@ When('I click on Continue Shopping') do
 end
 
 Then('I should be redirected to the products page') do
-  expect(current_url).to include('/inventory.html')
+  expect(page).to have_content('Products')
+  expect(page).to have_button('Add to cart')
 end
 
 When('I click on Checkout') do
@@ -29,5 +30,5 @@ When('I click on Checkout') do
 end
 
 Then('I should be taken to the checkout information page') do
-  expect(current_url).to include('/checkout-step-one.html')
+  expect(page).to have_content('Checkout: Your Information')
 end

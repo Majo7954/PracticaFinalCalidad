@@ -9,7 +9,8 @@ When('I click on Continue') do
 end
 
 Then('I should see the checkout overview page') do
-  expect(current_url).to include('/checkout-step-two.html')
+  expect(page).to have_content('Checkout: Overview')
+  expect(page).to have_button('Finish')
 end
 
 When('I click on Cancel') do
@@ -17,7 +18,8 @@ When('I click on Cancel') do
 end
 
 Then('I should be redirected to the cart page') do
-  expect(current_url).to include('/cart.html')
+  expect(page).to have_content('Your Cart')
+  expect(page).to have_button('Continue Shopping')
 end
 
 When('I click on Finish') do
