@@ -1,12 +1,20 @@
 Feature: Login to Swag Labs
 
   Background:
-    Given I am on the login page of SauceDemo
+    Given I am on the login page
 
   @passed
-  Scenario: Login with valid credentials
-    When I login with username "standard_user" and password "secret_sauce"
-    Then I should be redirected to the inventory page
+Scenario Outline: Login with valid user <user>
+  When I login with username "<user>" and password "secret_sauce"
+  Then I should be redirected to the inventory page
+
+Examples:
+  | user                    |
+  | standard_user           |
+  | problem_user            |
+  | performance_glitch_user |
+  | error_user              |
+  | visual_user             |
 
   @locked
   @rejected
@@ -14,26 +22,7 @@ Feature: Login to Swag Labs
     When I login with username "locked_out_user" and password "secret_sauce"
     Then I should see an error message "Epic sadface: Sorry, this user has been locked out."
     And I should remain on the login page
-
-  @passed
-  Scenario: Login with a user with interface issues
-    When I login with username "problem_user" and password "secret_sauce"
-    Then I should be redirected to the inventory page
-
-  @passed
-  Scenario: Login with performance glitch user
-    When I login with username "performance_glitch_user" and password "secret_sauce"
-    Then I should be redirected to the inventory page
-
-  @passed
-  Scenario: Login with error user
-    When I login with username "error_user" and password "secret_sauce"
-    Then I should be redirected to the inventory page
-
-  @passed
-  Scenario: Login with visual user
-    When I login with username "visual_user" and password "secret_sauce"
-    Then I should be redirected to the inventory page
+    And I see the swaglab with 6 differents products and prices.
 
   @rejected
   Scenario: Attempt to login with empty username and password
