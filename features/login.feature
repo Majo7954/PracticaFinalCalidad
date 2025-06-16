@@ -1,7 +1,7 @@
 Feature: Login to Swag Labs
 
   Background:
-    Given I am on the login page
+  Given I am on the login page of SauceDemo
 
   @passed
 Scenario Outline: Login with valid user <user>
@@ -22,7 +22,6 @@ Examples:
     When I login with username "locked_out_user" and password "secret_sauce"
     Then I should see an error message "Epic sadface: Sorry, this user has been locked out."
     And I should remain on the login page
-    And I see the swaglab with 6 differents products and prices.
 
   @rejected
   Scenario: Attempt to login with empty username and password

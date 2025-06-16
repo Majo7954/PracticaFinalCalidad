@@ -1,29 +1,34 @@
+require_relative '../pages/login_page'
+
+Before do
+  @login_page = LoginPage.new
+end
+
 Given('I am on the login page of SauceDemo') do
-  visit 'https://www.saucedemo.com'
+  @login_page.visit_page
 end
 
 When('I login with username {string} and password {string}') do |username, password|
-  fill_in 'user-name', with: username
-  fill_in 'password', with: password
-  click_button 'Login'
+  @login_page.login_with(username, password)
 end
 
 Then('I should be redirected to the inventory page') do
-  expect(URI.parse(current_url).path).to eq('/inventory.html')
-end
-
-Then('I should not be redirected to the inventory page') do
-  expect(URI.parse(current_url).path).not_to eq('/inventory.html')
-end
-
-Then('I should see an error message {string}') do |expected_message|
-  expect(page).to have_content(expected_message)
+  expect(@login_page.products_title_visible?).to be true
 end
 
 Then('I should remain on the login page') do
-  expect(URI.parse(current_url).path).to eq('/')
+  expect(@login_page.still_on_login_fields?).to be true
+end
+
+Then('I should see an error message {string}') do |expected_message|
+  expect(@login_page.login_failed_message_visible?(expected_message)).to be true
 end
 
 When('I reload the page') do
-  visit current_url
+  @login_page.reload
+end
+
+Then('I see the swaglab with {int} differents products and prices.') do |count|
+  expect(@login_page.number_of_visible_products).to eq(count)
+  expect(@login_page.all_products_have_name_and_price?).to be true
 end
