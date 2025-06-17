@@ -1,56 +1,50 @@
 class CheckoutPage
   include Capybara::DSL
 
-  def fill_checkout_info(first_name, last_name, postal_code)
-    fill_in 'first-name', with: first_name
-    fill_in 'last-name', with: last_name
-    fill_in 'postal-code', with: postal_code
+  def add_product_to_cart(product_name)
+    find('div.inventory_item', text: product_name).find('button').click
+  end
+
+  def go_to_cart
+    find('.shopping_cart_link').click
+  end
+
+  def click_checkout
+    click_button('Checkout')
+  end
+
+  def fill_information(first, last, zip)
+    fill_in 'First Name', with: first
+    fill_in 'Last Name', with: last
+    fill_in 'Zip/Postal Code', with: zip
   end
 
   def click_continue
-    find(:xpath, "//input[@value='Continue']").click
-  end
-
-  def on_overview_page?
-    has_xpath?("//span[text()='Checkout: Overview']") &&
-      has_xpath?("//button[text()='Finish']")
-  end
-
-  def click_cancel
-    find(:xpath, "//button[text()='Cancel']").click
-  end
-
-  def on_cart_page?
-    has_xpath?("//span[text()='Your Cart']") &&
-      has_xpath?("//button[text()='Continue Shopping']") &&
-      !has_xpath?("//button[text()='Finish']")
+    click_button('Continue')
   end
 
   def click_finish
-    find(:xpath, "//button[text()='Finish']").click
+    click_button('Finish')
   end
 
-  def confirmation_message_visible?(message)
-    has_content?(message)
+  def click_cancel
+    click_button('Cancel')
   end
 
-  def continue_without_filling_fields
-    find(:xpath, "//input[@value='Continue']").click
+  def checkout_overview_displayed?
+    page.has_current_path?(/checkout-step-two/, url: true) &&
+    page.has_content?('Checkout: Overview')
   end
 
-  def error_fields_required?
-    has_content?('Error: First Name is required') &&
-    has_content?('Error: Last Name is required') &&
-    has_content?('Error: Postal Code is required')
+  def confirmation_message_displayed?(message)
+    page.has_content?(message)
   end
 
-  def complete_checkout
-    fill_checkout_info('Maria', 'Lopez', '45678')
-    click_continue
-    click_finish
+  def redirected_to_cart?
+    page.has_current_path?(/cart/, url: true)
   end
 
-  def redirected_to_products_page?
-    has_xpath?("//span[text()='Products']")
+  def redirected_to_products?
+    page.has_current_path?(/inventory/, url: true)
   end
 end

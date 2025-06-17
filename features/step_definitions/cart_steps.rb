@@ -6,10 +6,6 @@ Given('I add a product to the cart') do
   cart.visit_products_and_add_first_product
 end
 
-Given('I go to the cart page') do
-  cart.go_to_cart
-end
-
 When('I remove the product from the cart') do
   cart.remove_first_product
 end
@@ -26,7 +22,8 @@ Then('I should be redirected to the products page from the cart') do
   expect(cart.on_products_page?).to be true
 end
 
-When('I click on Checkout') do
+
+When('I proceed to checkout from cart') do
   cart.go_to_checkout
 end
 

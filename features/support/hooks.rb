@@ -1,3 +1,4 @@
+require 'capybara-screenshot/cucumber'
 require 'fileutils'
 
 Before do |scenario|
@@ -13,13 +14,15 @@ end
 
 After do |scenario|
   if scenario.failed?
-    puts " Escenario fallido: #{scenario.name}"
+    puts "❌ Escenario fallido: #{scenario.name}"
     Capybara::Screenshot.screenshot_and_save_page
-    filename = Capybara::Screenshot.filename_for(:html, Capybara::Screenshot.counter)
-    basename = "#{scenario.name.downcase.gsub(/[^a-z0-9]+/, '_')}.html"
-    new_path = File.join('screenshots', basename)
-    FileUtils.mv(filename, new_path) if File.exist?(filename)
+    # Buscar el último screenshot generado (HTML)
+    last_screenshot = Dir["screenshots/*.html"].max_by { |f| File.mtime(f) }
+    if last_screenshot
+      new_name = "screenshots/#{scenario.name.downcase.gsub(/[^a-z0-9]+/, '_')}.html"
+      FileUtils.mv(last_screenshot, new_name) unless File.exist?(new_name)
+    end
   else
-    puts "Escenario exitoso: #{scenario.name}"
+    puts "✅ Escenario exitoso: #{scenario.name}"
   end
 end
