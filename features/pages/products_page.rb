@@ -1,38 +1,34 @@
+# features/pages/products_page.rb
 class ProductsPage
   include Capybara::DSL
 
-  def verify_products_page
-    find(:xpath, "//span[text()='Products']")
+  def listed_products?
+    has_css?('.inventory_item')
   end
 
-  def product_names
-    all('.inventory_item_name').map(&:text)
-  end
-
-  def number_of_products
+  def product_count
     all('.inventory_item').size
   end
 
-  def has_product_with_price?(product_name, price)
-    item = find(:xpath, "//div[@class='inventory_item'][.//div[text()='#{product_name}']]")
-    item.has_text?(price)
+  def product_displayed?(name, price)
+    has_css?('.inventory_item_name', text: name) &&
+      has_css?('.inventory_item_price', text: price)
   end
 
   def add_to_cart(product_name)
-    find(:xpath, "//div[text()='#{product_name}']/ancestor::div[@class='inventory_item']//button").click
+    find('div.inventory_item', text: product_name).find('button', text: 'Add to cart').click
   end
 
-  def cart_icon_count
-    find('.shopping_cart_badge').text.to_i
+  def cart_count
+    find('.shopping_cart_badge').text
   end
 
   def sort_by(criteria)
-    select_element = find(:xpath, "//select[@data-test='product-sort-container']")
-    select_element.select(criteria)
+    # Asegura seleccionar correctamente en base al texto visible del <select>
+    find('select.product_sort_container').select(criteria)
   end
 
-
   def first_product_name
-    first('.inventory_item_name').text
+    all('.inventory_item_name').first.text
   end
 end
