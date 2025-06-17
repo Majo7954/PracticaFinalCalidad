@@ -23,3 +23,4 @@ Capybara.default_max_wait_time = 5
 
 Capybara::Screenshot.autosave_on_failure = true
 Capybara::Screenshot.prune_strategy = :keep_last_run
+Capybara.save_path = File.join(Dir.pwd, 'screenshots')
