@@ -1,15 +1,13 @@
 class FooterPage
   include Capybara::DSL
 
-  def twitter_link
-    find('a[href="https://twitter.com/saucelabs"]', visible: true)
-  end
+  SOCIAL_LINKS = {
+    twitter:   'https://twitter.com/saucelabs',
+    facebook:  'https://www.facebook.com/saucelabs',
+    linkedin:  'https://www.linkedin.com/company/sauce-labs/'
+  }
 
-  def facebook_link
-    find('a[href="https://www.facebook.com/saucelabs"]', visible: true)
-  end
-
-  def linkedin_link
-    find('a[href="https://www.linkedin.com/company/sauce-labs/"]', visible: true)
+  def social_icon_href(platform)
+    find("a[href='#{SOCIAL_LINKS[platform]}']", visible: true)[:href]
   end
 end
