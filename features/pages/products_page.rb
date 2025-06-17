@@ -24,7 +24,8 @@ class ProductsPage
   end
 
   def sort_by(criteria)
-    select criteria, from: 'product_sort_container'
+    # Asegura seleccionar correctamente en base al texto visible del <select>
+    find('select.product_sort_container').select(criteria)
   end
 
   def first_product_name
