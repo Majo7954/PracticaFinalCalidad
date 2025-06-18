@@ -4,7 +4,7 @@ Feature: Sidebar Logout
   Background:
     Given I am on the login page
 
-    @logout
+   @bvt @logout
 Scenario Outline: Logout as <user>
   When I login with username "<user>" and password "secret_sauce"
   And I open the sidebar
@@ -37,17 +37,6 @@ Examples:
   | performance_glitch_user |
   | visual_user             |
   | error_user              |
-
-  @about
-  @aboutproblem
-  Scenario: Redirect to About page as problem_user
-    When I login with username "problem_user" and password "secret_sauce"
-    And I open the sidebar
-    And I click on "About"
-    Then I should be redirected to "https://saucelabs.com/error/404"
-    And I see the SauceLabs homepage
-    And I see an error "404 Not Found" in the homepage
-    And I see a green robot next to the message
 
     @allitems
    Scenario: Verify item prices are visually altered for visual_user

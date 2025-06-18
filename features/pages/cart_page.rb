@@ -7,16 +7,17 @@ class CartPage
     find(:xpath, "(//button[contains(text(),'Add to cart')])[1]").click
   end
 
-  def go_to_cart
+  def open_cart
     find(:xpath, "//a[@class='shopping_cart_link']").click
   end
 
-  def remove_first_product
+  def remove_product
     find(:xpath, "//button[contains(@data-test, 'remove-')]").click
   end
 
-  def cart_empty?
-    has_xpath?("//div[text()='Your Cart']") && !has_xpath?("//div[@class='cart_item']")
+  def is_cart_empty?
+  puts "🛒 Total en carrito: #{cart_count}"
+  on_cart_page? && cart_count == 0
   end
 
   def continue_shopping
@@ -25,14 +26,22 @@ class CartPage
 
   def on_products_page?
     has_xpath?("//span[text()='Products']") &&
-      has_xpath?("//button[text()='Add to cart']")
+      has_button?("Add to cart")
   end
 
-  def go_to_checkout
+  def proceed_to_checkout
     find(:xpath, "//button[text()='Checkout']").click
   end
 
   def on_checkout_info_page?
     has_xpath?("//span[text()='Checkout: Your Information']")
+  end
+
+  def on_cart_page?
+    has_xpath?("//span[text()='Your Cart']")
+  end
+
+  def cart_count
+    all(:xpath, "//div[@class='cart_item']").size
   end
 end

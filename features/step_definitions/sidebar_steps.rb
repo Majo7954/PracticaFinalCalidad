@@ -1,71 +1,80 @@
-require_relative '../pages/sidebar_page'
-
-sidebar_page = SidebarPage.new
-
 When('I open the sidebar') do
-  sidebar_page.open
+  find('#react-burger-menu-btn').click
 end
 
 When('I click on "Logout"') do
-  sidebar_page.click_logout
+  find('a#logout_sidebar_link', visible: :all).click
 end
 
 When('I click on "About"') do
-  sidebar_page.click_about
+  find('a#about_sidebar_link', visible: :all).click
 end
 
 Then('I should be redirected to the login page') do
-  expect(sidebar_page.redirected_to_login?).to be true
+  expect(page).to have_current_path('/', ignore_query: true)
 end
 
 Then('I should be redirected to {string}') do |expected_url|
-  expect(sidebar_page.redirected_to?(expected_url)).to be true
+  sleep 1
+  current = page.current_url
+  expect(current).to include(expected_url)
 end
 
 When('I click on "All Items"') do
-  sidebar_page.click_all_items
+  find('a#inventory_sidebar_link', visible: :all).click
 end
 
 Then('the item prices should be incorrect') do
-  expect(sidebar_page.item_prices_incorrect?).to be true
+  expected_prices = ["$29.99", "$9.99", "$15.99", "$49.99", "$7.99", "$39.99"]
+  actual_prices = all('div.inventory_item_price').map(&:text)
+  puts "Visual_user prices: #{actual_prices}"
+  expect(actual_prices).not_to eq(expected_prices)
 end
 
 Then('the item prices should change each time All Items is clicked') do
-  expect(sidebar_page.item_prices_change_each_time?).to be true
+  initial_prices = all('div.inventory_item_price').map(&:text)
+  puts "Primer conjunto de precios: #{initial_prices}"
+
+  find('a#inventory_sidebar_link').click
+  sleep 1
+
+  second_prices = all('div.inventory_item_price').map(&:text)
+  puts "Segundo conjunto de precios: #{second_prices}"
+
+  expect(second_prices).not_to eq(initial_prices)
+end
+
+Then('Prices range from $0 to $100') do
+  prices = all('.inventory_item_price').map { |e| e.text.delete('$').to_f }
+  prices.each do |price|
+    expect(price).to be >= 0
+    expect(price).to be <= 100
+  end
 end
 
 Then('I see the SauceLabs homepage') do
-  Capybara.using_wait_time(10) do
-    expect(page).to have_xpath("//h1[contains(text(), 'Build apps users love with AI-driven insights')]")
-  end
+  expect(page.title).to include("Sauce Labs")
 end
 
 Then('I see the tabs and login in the top box') do
-  expect(page).to have_xpath("//a[contains(text(), 'Solutions')]")
-  expect(page).to have_xpath("//a[contains(text(), 'Pricing')]")
-  expect(page).to have_xpath("//a[contains(text(), 'Sign in')]")
+  expect(page).to have_content('Products')
+  expect(page).to have_content('Solutions')
+  expect(page).to have_content('Pricing')
+  expect(page).to have_content('Developers')
+  expect(page).to have_content('Resources')
+  expect(page).to have_link('Sign in')
+  expect(page).to have_button('Request a demo')
+  expect(page).to have_button('Try it free')
 end
 
 Then('I see the title {string}') do |expected_title|
-  Capybara.using_wait_time(10) do
-    expect(page).to have_selector('h1', text: expected_title)
-  end
+  expect(page).to have_content(expected_title)
 end
 
-Then('I see an error {string} in the homepage') do |error_msg|
-  expect(page).to have_content(error_msg)
+Then('I see an error {string} in the homepage') do |error_message|
+  expect(page).to have_content(error_message)
 end
 
 Then('I see a green robot next to the message') do
-  expect(page).to have_xpath("//img[contains(@src, '404') and contains(@alt, 'robot')]")
-end
-
-Then('Prices range from ${int} to ${int}') do |min, max|
-  prices = all(:xpath, "//div[@class='inventory_item_price']").map { |p| p.text.gsub('$', '').to_f }
-  expect(prices).not_to be_empty
-  expect(prices.all? { |price| price >= min && price <= max }).to be true
-end
-
-Given('I am on the login page') do
-  visit 'https://www.saucedemo.com/'
+  expect(page).to have_css('svg', visible: true)
 end

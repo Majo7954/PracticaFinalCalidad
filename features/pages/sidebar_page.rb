@@ -2,15 +2,15 @@ class SidebarPage
   include Capybara::DSL
 
   def open
-    find(:xpath, "//button[@id='react-burger-menu-btn']").click
+    find('#react-burger-menu-btn').click
   end
 
   def click_logout
-    find(:xpath, "//a[@id='logout_sidebar_link']", visible: :all).click
+    find('a#logout_sidebar_link', visible: :all).click
   end
 
   def click_about
-    find(:xpath, "//a[@id='about_sidebar_link']", visible: :all).click
+    find('a#about_sidebar_link', visible: :all).click
   end
 
   def redirected_to_login?
@@ -23,22 +23,22 @@ class SidebarPage
   end
 
   def click_all_items
-    find(:xpath, "//a[@id='inventory_sidebar_link']", visible: :all).click
+    find('a#inventory_sidebar_link', visible: :all).click
   end
 
   def item_prices_incorrect?
     expected_prices = ["$29.99", "$9.99", "$15.99", "$49.99", "$7.99", "$39.99"]
-    actual_prices = all(:xpath, "//div[@class='inventory_item_price']").map(&:text)
+    actual_prices = all('.inventory_item_price').map(&:text)
     puts "Visual_user prices: #{actual_prices}"
     actual_prices != expected_prices
   end
 
   def item_prices_change_each_time?
-    first_prices = all(:xpath, "//div[@class='inventory_item_price']").map(&:text)
+    first_prices = all('.inventory_item_price').map(&:text)
     puts "Primer conjunto de precios: #{first_prices}"
     click_all_items
     sleep 1
-    second_prices = all(:xpath, "//div[@class='inventory_item_price']").map(&:text)
+    second_prices = all('.inventory_item_price').map(&:text)
     puts "Segundo conjunto de precios: #{second_prices}"
     first_prices != second_prices
   end

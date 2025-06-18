@@ -32,3 +32,9 @@ Then('I see the swaglab with {int} differents products and prices.') do |count|
   expect(@login_page.number_of_visible_products).to eq(count)
   expect(@login_page.all_products_have_name_and_price?).to be true
 end
+
+Given('I am on the login page') do
+  @login_page ||= LoginPage.new
+  @login_page.visit_page
+end
+
